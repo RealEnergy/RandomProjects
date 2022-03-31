@@ -1,3 +1,6 @@
+import 'dart:convert';
+import "dart:io";
+
 class Note {
   String title, description, expiredate;
   Note(
@@ -8,14 +11,30 @@ class Note {
   String toString() => '$title : $description. Expiration date: $expiredate';
 }
 
-void main(List<String> args) {
-  var list = [];
-  var note1 = Note(title: "Study", description: "Learn a new language");
-  list.add(note1);
-  var note2 = Note(
-      description: "Learn a new programming language", expiredate: "Tomorrow");
-  list.add(note2);
-  for (var note in list) {
-    print(note);
+class FileInteractor {
+  String filePath;
+  var file;
+  FileInteractor(this.filePath) {
+    file = File(filePath);
   }
+
+  void overwriteContent(String toWrite) {
+    file.writeAsString(toWrite);
+  }
+}
+
+void main(List<String> args) {
+  var f = FileInteractor("./todo.txt");
+  print("Adding Note 1");
+  var n1 = Note(title: "Learn a new language", description: "Maybe Greek");
+  f.overwriteContent(n1.toString());
+  print("Adding Note 2");
+  var n2 = Note(title: "Travel somewhere nice", description: "Maybe Greece");
+  var t = f.file.readAsString(encoding: ascii);
+  var notes = t . n2.toString();
+  f.overwriteContent(notes);
+  print("Attempting to retrieve notes from file");
+  var r = f.file.readAsString(encoding: ascii);
+  print("Notes retrieved. Printing...\n");
+  print(r);
 }
